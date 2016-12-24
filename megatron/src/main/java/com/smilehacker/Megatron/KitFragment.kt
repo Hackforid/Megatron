@@ -3,6 +3,7 @@ package com.smilehacker.Megatron
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
+import com.smilehacker.Megatron.model.SharedTransition
 import com.smilehacker.Megatron.util.DLog
 
 /**
@@ -50,13 +51,14 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         onVisible()
     }
 
-    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentActor.startFragment(to, bundle, launchMode)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int,
+                                              sharedTransition: SharedTransition?) {
+        mFragmentActor.startFragment(to, bundle, launchMode, sharedTransition)
     }
 
 
-    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentActor.startFragmentForResult(to, bundle, requestCode, launchMode)
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int, sharedTransition: SharedTransition?) {
+        mFragmentActor.startFragmentForResult(to, bundle, requestCode, launchMode, sharedTransition)
     }
 
 
@@ -110,6 +112,14 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
             DLog.d(it.javaClass.name + ":" + it.tag)
         }
         DLog.i("===end===")
+    }
+
+    override fun getSharedTransition(): SharedTransition? {
+        return mFragmentActor.getSharedTransition()
+    }
+
+    override fun setSharedTransition(sharedTransition: SharedTransition?) {
+        mFragmentActor.setSharedTransition(sharedTransition)
     }
 
 }

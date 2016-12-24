@@ -2,6 +2,7 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.smilehacker.Megatron.model.SharedTransition
 
 /**
  * Created by kleist on 16/8/2.
@@ -10,6 +11,7 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
 
     override val hostActivity : HostActivity by lazy { fragment.activity as HostActivity }
     private val mFragmentation : Fragmentation by lazy { hostActivity.mFragmentation }
+    private var mSharedTransition : SharedTransition? = null
 
     override var fragmentResult: FragmentResult? = null
 
@@ -19,12 +21,13 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         }
     }
 
-    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentation.start(fragment.fragmentManager, to, bundle, launchMode)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int,
+                                              sharedTransition: SharedTransition?) {
+        mFragmentation.start(fragment.fragmentManager, to, bundle, launchMode, sharedTransition = sharedTransition)
     }
 
-    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(fragment.fragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int, sharedTransition: SharedTransition?) {
+        mFragmentation.start(fragment.fragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode, sharedTransition)
     }
 
 
@@ -43,4 +46,11 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
     }
 
+    override fun getSharedTransition(): SharedTransition? {
+        return mSharedTransition
+    }
+
+    override fun setSharedTransition(sharedTransition: SharedTransition?) {
+        mSharedTransition = sharedTransition
+    }
 }

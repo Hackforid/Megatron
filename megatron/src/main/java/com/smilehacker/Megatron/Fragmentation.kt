@@ -1,10 +1,12 @@
 package com.smilehacker.Megatron
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import com.smilehacker.Megatron.model.SharedTransition
 import com.smilehacker.Megatron.util.createParcel
 import com.smilehacker.Megatron.util.nullOr
 import java.util.*
@@ -67,10 +69,11 @@ class Fragmentation : Parcelable {
     }
 
     fun <T : Fragment> start(fragmentManager: FragmentManager, to: Class<T>,
-              bundle: Bundle? = null,
-              launchMode: Int = LAUNCH_MODE.STANDARD,
-              startType: Int = START_TYPE.ADD,
-              requestCode: Int = 0) {
+                             bundle: Bundle? = null,
+                             launchMode: Int = LAUNCH_MODE.STANDARD,
+                             startType: Int = START_TYPE.ADD,
+                             requestCode: Int = 0,
+                             sharedTransition: SharedTransition? = null) {
 
         val fragmentTag : String?
         val top: Fragment?
@@ -84,7 +87,7 @@ class Fragmentation : Parcelable {
             LAUNCH_MODE.STANDARD -> {
                 fragmentTag = mFragmentStack.getNewFragmentName(to)
                 mFragmentStack.putStandard(fragmentTag)
-                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
+                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode, sharedTransition)
             }
             LAUNCH_MODE.SINGLE_TOP -> {
                 if (top != null && top.javaClass == to) {
@@ -104,20 +107,21 @@ class Fragmentation : Parcelable {
                     mFragmentStack.putStandard(fragmentTag)
                     startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
                 } else {
-                    startSingleTask(fragmentManager, to, bundle)
+                    startSingleTask(fragmentManager, to, bundle, sharedTransition)
                 }
             }
         }
     }
 
-    private fun <T : Fragment>  startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
-        popTo(fragmentManager, to, bundle, false)
+    private fun <T : Fragment>  startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?, sharedTransition: SharedTransition? = null) {
+        popTo(fragmentManager, to, bundle, false, sharedTransition)
     }
 
     private fun startStandard(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
                               toTag: String,
-              startType: Int = START_TYPE.ADD,
-              requestCode: Int = 0) {
+                              startType: Int = START_TYPE.ADD,
+                              requestCode: Int = 0,
+                              sharedTransition: SharedTransition? = null) {
         if (to !is IKitFragmentAction) {
             throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
         }
@@ -136,6 +140,16 @@ class Fragmentation : Parcelable {
         } else {
             ft.add(mContainerID, to, toTag)
         }
+        if (Build.VERSION.SDK_INT >= 21 && sharedTransition != null) {
+            to.setSharedTransition(sharedTransition.copy(sharedElement = null, transitionName = sharedTransition.sharedElement?.transitionName))
+            if (sharedTransition.sharedElementEnterTransition != null) {
+                to.sharedElementEnterTransition = sharedTransition.sharedElementEnterTransition
+            }
+            if (sharedTransition.sharedElementReturnTransition != null) {
+                to.sharedElementReturnTransition= sharedTransition.sharedElementReturnTransition
+            }
+            ft.addSharedElement(sharedTransition.sharedElement, sharedTransition.transitionName)
+        }
         ft.commitNow()
     }
 
@@ -144,7 +158,7 @@ class Fragmentation : Parcelable {
         popTo(fragmentManager, fragment.javaClass, null, true)
     }
 
-    fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false) {
+    fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false, sharedTransition: SharedTransition? = null) {
         val fragments = getFragments(fragmentManager)
         if (fragments.isEmpty()) {
             return
@@ -181,9 +195,7 @@ class Fragmentation : Parcelable {
         target as IKitFragmentAction
 
         val ft = fragmentManager.beginTransaction()
-        if (top.getAnimation() != null) {
-            ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
-        }
+        ft.setCustomAnimations(target.getAnimation()?.first.nullOr(0), top.getAnimation()?.second.nullOr(0))
         for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex)) {
             if (i > 0) {
                 handleFragmentResult(fragments[i], fragments[i-1])
@@ -191,6 +203,15 @@ class Fragmentation : Parcelable {
             ft.remove(fragments[i])
         }
         ft.show(target)
+
+        val mySharedTransition = sharedTransition ?: top.getSharedTransition()
+        if (Build.VERSION.SDK_INT >= 21 && mySharedTransition != null) {
+            if (mySharedTransition.sharedElementEnterTransition != null) {
+                target.sharedElementEnterTransition = mySharedTransition.sharedElementEnterTransition
+            }
+            ft.addSharedElement(mySharedTransition.sharedElement, mySharedTransition.transitionName)
+        }
+
         ft.commitNow()
         mFragmentStack.popTo(target.tag, false)
     }

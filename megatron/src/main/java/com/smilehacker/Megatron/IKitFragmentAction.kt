@@ -2,6 +2,7 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.smilehacker.Megatron.model.SharedTransition
 
 /**
  * Created by kleist on 16/6/7.
@@ -21,11 +22,13 @@ interface IFragmentAction {
     }
 
     fun <T : Fragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
+                                     sharedTransition: SharedTransition? = null)
 
 
     fun <T : Fragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
+                                              sharedTransition: SharedTransition? = null)
 
     fun popFragment()
 
@@ -41,6 +44,10 @@ interface IKitFragmentActor : IFragmentAction {
     fun finish()
 
     fun setResult(resultCode: Int, data: Bundle? = null)
+
+    fun getSharedTransition() : SharedTransition? = null
+
+    fun setSharedTransition(sharedTransition: SharedTransition?)
 }
 
 interface IKitFragmentAction : IKitFragmentActor {
