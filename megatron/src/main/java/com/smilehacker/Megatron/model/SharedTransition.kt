@@ -14,6 +14,7 @@ data class SharedTransition(var sharedElement: View?,
                             var sharedElementEnterTransition: Transition? = DefaultTransition(),
                             var sharedElementReturnTransition: Transition? = DefaultTransition())
 
+@TargetApi(21)
 class DefaultTransition : TransitionSet() {
     init {
         if (Build.VERSION.SDK_INT >= 21) {
