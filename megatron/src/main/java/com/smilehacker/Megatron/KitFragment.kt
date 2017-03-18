@@ -22,7 +22,6 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
     override val hostActivity: HostActivity
         get() = mFragmentActor.hostActivity
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
