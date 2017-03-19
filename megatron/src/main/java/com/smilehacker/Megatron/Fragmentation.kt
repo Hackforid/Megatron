@@ -141,12 +141,9 @@ class Fragmentation : Parcelable {
             ft.add(mContainerID, to, toTag)
         }
         if (Build.VERSION.SDK_INT >= 21 && sharedTransition != null) {
-            to.setSharedTransition(sharedTransition.copy(sharedElement = null, transitionName = sharedTransition.sharedElement?.transitionName))
             if (sharedTransition.sharedElementEnterTransition != null) {
+                from?.sharedElementReturnTransition = sharedTransition.sharedElementReturnTransition
                 to.sharedElementEnterTransition = sharedTransition.sharedElementEnterTransition
-            }
-            if (sharedTransition.sharedElementReturnTransition != null) {
-                to.sharedElementReturnTransition= sharedTransition.sharedElementReturnTransition
             }
             ft.addSharedElement(sharedTransition.sharedElement, sharedTransition.transitionName)
         }
@@ -208,6 +205,7 @@ class Fragmentation : Parcelable {
         if (Build.VERSION.SDK_INT >= 21 && mySharedTransition != null) {
             if (mySharedTransition.sharedElementEnterTransition != null) {
                 target.sharedElementEnterTransition = mySharedTransition.sharedElementEnterTransition
+                top.sharedElementReturnTransition = mySharedTransition.sharedElementReturnTransition
             }
             ft.addSharedElement(mySharedTransition.sharedElement, mySharedTransition.transitionName)
         }

@@ -1,5 +1,6 @@
 package com.smilehacker.Megatron
 
+import android.annotation.TargetApi
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
@@ -113,6 +114,7 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         DLog.i("===end===")
     }
 
+    @TargetApi(21)
     override fun getSharedTransition(): SharedTransition? {
         return mFragmentActor.getSharedTransition()
     }
