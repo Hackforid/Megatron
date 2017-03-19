@@ -7,7 +7,6 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.smilehacker.Megatron.model.SharedTransition
-import com.smilehacker.Megatron.util.DLog
 import com.smilehacker.Megatron.util.createParcel
 import com.smilehacker.Megatron.util.nullOr
 import java.util.*
@@ -49,7 +48,7 @@ class Fragmentation : Parcelable {
         const val STANDARD = 3
     }
 
-    private lateinit var mFragmentStack: FragmentStack
+    private var mFragmentStack: FragmentStack
 
     private var mContainerID: Int = 0
 
@@ -149,7 +148,6 @@ class Fragmentation : Parcelable {
             if (sharedTransition.sharedElementReturnTransition != null) {
                 to.sharedElementReturnTransition= sharedTransition.sharedElementReturnTransition
             }
-            DLog.i("sharedElement=${sharedTransition.sharedElement} name=${sharedTransition.transitionName}")
             ft.addSharedElement(sharedTransition.sharedElement, sharedTransition.transitionName)
         }
         ft.commitNow()
