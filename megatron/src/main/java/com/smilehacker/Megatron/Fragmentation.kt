@@ -157,6 +157,7 @@ class Fragmentation : Parcelable {
         popTo(fragmentManager, fragment.javaClass, null, true)
     }
 
+
     fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false, sharedTransition: SharedTransition? = null) {
         val fragments = getFragments(fragmentManager)
         if (fragments.isEmpty()) {
@@ -203,6 +204,7 @@ class Fragmentation : Parcelable {
         }
         ft.show(target)
 
+        // TODO 这块太乱了 整理下 看看activity的api
         val mySharedTransition = sharedTransition ?: top.getSharedTransition()
         if (Build.VERSION.SDK_INT >= 21 && mySharedTransition != null) {
             if (mySharedTransition.sharedElementEnterTransition != null) {
