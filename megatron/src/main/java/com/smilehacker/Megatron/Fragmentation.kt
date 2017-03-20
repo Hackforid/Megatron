@@ -25,7 +25,7 @@ class Fragmentation : Parcelable {
     }
 
     companion object {
-        @JvmField @Suppress("unused") val CREATOR = createParcel { Fragmentation(it) }
+        @JvmField @Suppress("unused") val CREATOR = createParcel(::Fragmentation)
     }
 
     constructor(parcel: Parcel) : this() {
@@ -145,7 +145,9 @@ class Fragmentation : Parcelable {
                 from?.sharedElementReturnTransition = sharedTransition.sharedElementReturnTransition
                 to.sharedElementEnterTransition = sharedTransition.sharedElementEnterTransition
             }
-            ft.addSharedElement(sharedTransition.sharedElement, sharedTransition.transitionName)
+            sharedTransition.shared.forEach {
+                ft.addSharedElement(it.first, it.second)
+            }
         }
         ft.commitNow()
     }
@@ -207,7 +209,9 @@ class Fragmentation : Parcelable {
                 target.sharedElementEnterTransition = mySharedTransition.sharedElementEnterTransition
                 top.sharedElementReturnTransition = mySharedTransition.sharedElementReturnTransition
             }
-            ft.addSharedElement(mySharedTransition.sharedElement, mySharedTransition.transitionName)
+            mySharedTransition.shared.forEach {
+                ft.addSharedElement(it.first, it.second)
+            }
         }
 
         ft.commitNow()
