@@ -123,4 +123,6 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         mFragmentActor.setSharedTransition(sharedTransition)
     }
 
+    override fun makeSceneTransitionAnimation(viewStart: View, transitionName: String) {
+    }
 }

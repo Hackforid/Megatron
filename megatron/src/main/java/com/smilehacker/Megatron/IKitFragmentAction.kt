@@ -2,6 +2,7 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
 import com.smilehacker.Megatron.model.SharedTransition
 
 /**
@@ -64,4 +65,5 @@ interface IKitFragmentAction : IKitFragmentActor {
 
     fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?)
 
+    fun makeSceneTransitionAnimation(viewStart: View, transitionName: String)
 }
