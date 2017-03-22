@@ -6,7 +6,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.smilehacker.Megatron.model.SharedTransition
+import android.util.Log
 import com.smilehacker.Megatron.util.createParcel
 import com.smilehacker.Megatron.util.nullOr
 import java.util.*
@@ -72,8 +72,7 @@ class Fragmentation : Parcelable {
                              bundle: Bundle? = null,
                              launchMode: Int = LAUNCH_MODE.STANDARD,
                              startType: Int = START_TYPE.ADD,
-                             requestCode: Int = 0,
-                             sharedTransition: SharedTransition? = null) {
+                             requestCode: Int = 0) {
 
         val fragmentTag : String?
         val top: Fragment?
@@ -87,7 +86,7 @@ class Fragmentation : Parcelable {
             LAUNCH_MODE.STANDARD -> {
                 fragmentTag = mFragmentStack.getNewFragmentName(to)
                 mFragmentStack.putStandard(fragmentTag)
-                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode, sharedTransition)
+                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
             }
             LAUNCH_MODE.SINGLE_TOP -> {
                 if (top != null && top.javaClass == to) {
@@ -107,21 +106,21 @@ class Fragmentation : Parcelable {
                     mFragmentStack.putStandard(fragmentTag)
                     startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
                 } else {
-                    startSingleTask(fragmentManager, to, bundle, sharedTransition)
+                    startSingleTask(fragmentManager, to, bundle)
                 }
             }
         }
     }
 
-    private fun <T : Fragment>  startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?, sharedTransition: SharedTransition? = null) {
-        popTo(fragmentManager, to, bundle, false, sharedTransition)
+    private fun <T : Fragment>  startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
+        popTo(fragmentManager, to, bundle, false)
     }
 
     private fun startStandard(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
                               toTag: String,
                               startType: Int = START_TYPE.ADD,
-                              requestCode: Int = 0,
-                              sharedTransition: SharedTransition? = null) {
+                              requestCode: Int = 0
+    ) {
         if (to !is IKitFragmentAction) {
             throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
         }
@@ -140,13 +139,9 @@ class Fragmentation : Parcelable {
         } else {
             ft.add(mContainerID, to, toTag)
         }
-        if (Build.VERSION.SDK_INT >= 21 && sharedTransition != null) {
-            if (sharedTransition.sharedElementEnterTransition != null) {
-                from?.sharedElementReturnTransition = sharedTransition.sharedElementReturnTransition
-                to.sharedElementEnterTransition = sharedTransition.sharedElementEnterTransition
-            }
-            sharedTransition.shared.forEach {
-                ft.addSharedElement(it.first, it.second)
+        if (Build.VERSION.SDK_INT >= 21 && from != null && from is IKitFragmentAction && from.getSharedElements().isNotEmpty()) {
+            from.getSharedElements().forEach {
+                ft.addSharedElement(it.value, it.key)
             }
         }
         ft.commitNow()
@@ -158,7 +153,7 @@ class Fragmentation : Parcelable {
     }
 
 
-    fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false, sharedTransition: SharedTransition? = null) {
+    fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false) {
         val fragments = getFragments(fragmentManager)
         if (fragments.isEmpty()) {
             return
@@ -204,15 +199,10 @@ class Fragmentation : Parcelable {
         }
         ft.show(target)
 
-        // TODO 这块太乱了 整理下 看看activity的api
-        val mySharedTransition = sharedTransition ?: top.getSharedTransition()
-        if (Build.VERSION.SDK_INT >= 21 && mySharedTransition != null) {
-            if (mySharedTransition.sharedElementEnterTransition != null) {
-                target.sharedElementEnterTransition = mySharedTransition.sharedElementEnterTransition
-                top.sharedElementReturnTransition = mySharedTransition.sharedElementReturnTransition
-            }
-            mySharedTransition.shared.forEach {
-                ft.addSharedElement(it.first, it.second)
+        if (Build.VERSION.SDK_INT >= 21 && top.getSharedElements().isNotEmpty()) {
+            top.getSharedElements().forEach {
+                Log.i("frag", "tran name = ${it.key}")
+                ft.addSharedElement(it.value, it.key)
             }
         }
 

@@ -3,7 +3,6 @@ package com.smilehacker.Megatron
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import com.smilehacker.Megatron.model.SharedTransition
 
 /**
  * Created by kleist on 16/6/6.
@@ -29,12 +28,12 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         super.onCreate(savedInstanceState)
     }
 
-    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int, sharedTransition: SharedTransition?) {
-        mFragmentation.start(supportFragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD, sharedTransition = sharedTransition)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
-    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int, sharedTransition: SharedTransition?) {
-        mFragmentation.start(supportFragmentManager, to, bundle, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode, sharedTransition = sharedTransition)
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, to, bundle, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
     override fun popFragment() {

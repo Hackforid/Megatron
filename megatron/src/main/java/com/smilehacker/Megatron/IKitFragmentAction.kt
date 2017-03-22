@@ -3,7 +3,6 @@ package com.smilehacker.Megatron
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
-import com.smilehacker.Megatron.model.SharedTransition
 
 /**
  * Created by kleist on 16/6/7.
@@ -23,13 +22,11 @@ interface IFragmentAction {
     }
 
     fun <T : Fragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
-                                     sharedTransition: SharedTransition? = null)
+                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
 
 
     fun <T : Fragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
-                                              sharedTransition: SharedTransition? = null)
+                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
 
     fun popFragment()
 
@@ -46,9 +43,9 @@ interface IKitFragmentActor : IFragmentAction {
 
     fun setResult(resultCode: Int, data: Bundle? = null)
 
-    fun getSharedTransition() : SharedTransition? = null
+    fun makeSceneTransitionAnimation(viewStart: View, transitionName: String)
 
-    fun setSharedTransition(sharedTransition: SharedTransition?)
+    fun getSharedElements(): MutableMap<String, View>
 }
 
 interface IKitFragmentAction : IKitFragmentActor {
@@ -65,5 +62,4 @@ interface IKitFragmentAction : IKitFragmentActor {
 
     fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?)
 
-    fun makeSceneTransitionAnimation(viewStart: View, transitionName: String)
 }
