@@ -2,8 +2,6 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
-import java.util.*
 
 /**
  * Created by kleist on 16/8/2.
@@ -12,7 +10,6 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
 
     override val hostActivity : HostActivity by lazy { fragment.activity as HostActivity }
     private val mFragmentation : Fragmentation by lazy { hostActivity.mFragmentation }
-    private val mSharedElements : MutableMap<String, View> by lazy { HashMap<String, View>() }
 
     override var fragmentResult: FragmentResult? = null
 
@@ -46,11 +43,4 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
     }
 
-    override fun makeSceneTransitionAnimation(viewStart: View, transitionName: String) {
-        mSharedElements[transitionName] = viewStart
-    }
-
-    override fun getSharedElements(): MutableMap<String, View> {
-        return mSharedElements
-    }
 }

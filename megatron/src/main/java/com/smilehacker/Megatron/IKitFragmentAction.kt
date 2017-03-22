@@ -2,7 +2,6 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
 
 /**
  * Created by kleist on 16/6/7.
@@ -43,9 +42,6 @@ interface IKitFragmentActor : IFragmentAction {
 
     fun setResult(resultCode: Int, data: Bundle? = null)
 
-    fun makeSceneTransitionAnimation(viewStart: View, transitionName: String)
-
-    fun getSharedElements(): MutableMap<String, View>
 }
 
 interface IKitFragmentAction : IKitFragmentActor {
