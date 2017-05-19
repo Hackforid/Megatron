@@ -2,6 +2,7 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.smilehacker.Megatron.model.FragmentOptions
 
 /**
  * Created by kleist on 16/6/7.
@@ -21,15 +22,15 @@ interface IFragmentAction {
     }
 
     fun <T : Fragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD, options: FragmentOptions? = null)
 
 
     fun <T : Fragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD, options: FragmentOptions? = null)
 
     fun popFragment()
 
-    fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false)
+    fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false, options: FragmentOptions? = null)
 }
 
 interface IKitFragmentActor : IFragmentAction {

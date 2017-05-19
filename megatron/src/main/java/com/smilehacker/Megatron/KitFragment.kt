@@ -110,12 +110,4 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         }
         DLog.i("===end===")
     }
-
-    override fun makeSceneTransitionAnimation(viewStart: View, transitionName: String) {
-        mFragmentActor.makeSceneTransitionAnimation(viewStart, transitionName)
-    }
-
-    override fun getSharedElements(): MutableMap<String, View> {
-        return mFragmentActor.getSharedElements()
-    }
 }
