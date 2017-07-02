@@ -2,6 +2,7 @@ package com.smilehacker.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
 
 /**
  * Created by kleist on 16/8/2.
@@ -43,4 +44,9 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
     }
 
+    override fun overridePendingTransition(shareElement: View, targetID: Int) {
+    }
+
+    override fun getSharedElementAnimation(): Pair<View, Int> {
+    }
 }

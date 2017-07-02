@@ -1,11 +1,16 @@
 package com.smilehacker.Megatron
 
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
-import com.smilehacker.Megatron.model.FragmentOptions
+import android.view.View
 
 /**
  * Created by kleist on 16/6/7.
+ */
+
+/**
+ * base interface
  */
 interface IFragmentAction {
     companion object {
@@ -22,17 +27,20 @@ interface IFragmentAction {
     }
 
     fun <T : Fragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD, options: FragmentOptions? = null)
+                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
 
 
     fun <T : Fragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD, options: FragmentOptions? = null)
+                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
 
     fun popFragment()
 
-    fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false, options: FragmentOptions? = null)
+    fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false)
 }
 
+/**
+ * interface for fragment delegate
+ */
 interface IKitFragmentActor : IFragmentAction {
 
     var fragmentResult: FragmentResult?
@@ -43,8 +51,14 @@ interface IKitFragmentActor : IFragmentAction {
 
     fun setResult(resultCode: Int, data: Bundle? = null)
 
+    fun overridePendingTransition(shareElement: View, @IdRes targetID: Int)
+
+    fun getSharedElementAnimation() : Pair<View, Int>
 }
 
+/**
+ * interface for fragment
+ */
 interface IKitFragmentAction : IKitFragmentActor {
 
     fun onVisible()
