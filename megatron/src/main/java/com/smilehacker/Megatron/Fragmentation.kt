@@ -1,12 +1,12 @@
 package com.smilehacker.Megatron
 
 import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.util.Log
 import com.smilehacker.Megatron.util.createParcel
 import com.smilehacker.Megatron.util.nullOr
 import java.util.*
@@ -90,7 +90,7 @@ class Fragmentation : Parcelable {
             }
             LAUNCH_MODE.SINGLE_TOP -> {
                 if (top != null && top.javaClass == to) {
-                    top as IKitFragmentAction
+                    top as IKitFragment
                     top.onNewBundle(bundle)
                 } else {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
@@ -121,7 +121,7 @@ class Fragmentation : Parcelable {
                               startType: Int = START_TYPE.ADD,
                               requestCode: Int = 0
     ) {
-        if (to !is IKitFragmentAction) {
+        if (to !is IKitFragment) {
             throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
         }
         when (startType) {
@@ -131,17 +131,20 @@ class Fragmentation : Parcelable {
         }
 
         val ft = fragmentManager.beginTransaction()
-        ft.setCustomAnimations(to.getAnimation()?.first.nullOr(0), if (from !is IKitFragmentAction) 0 else from?.getAnimation()?.second.nullOr(0))
+        if (from is IKitFragment) {
+            val transitionAnims = from.transitionAnimation
+            ft.setCustomAnimations(transitionAnims?.first.nullOr(0), transitionAnims?.second.nullOr(0))
+        }
 
         if (from != null) {
-            ft.add(mContainerID, to, toTag)
             ft.hide(from)
+            ft.add(mContainerID, to, toTag)
         } else {
             ft.add(mContainerID, to, toTag)
         }
-        if (Build.VERSION.SDK_INT >= 21 && from != null && from is IKitFragmentAction && from.getSharedElements().isNotEmpty()) {
-            from.getSharedElements().forEach {
-                ft.addSharedElement(it.value, it.key)
+        if (VERSION.SDK_INT >= 21 && from != null && from is IKitFragmentActor) {
+            from.getShareElementPairs()?.forEach {
+                ft.addSharedElement(it.first, it.second)
             }
         }
         ft.commitNow()
@@ -162,7 +165,7 @@ class Fragmentation : Parcelable {
         val instanceIndex = mFragmentStack.getSingleTaskInstancePos(fragmentClass)
         val target : Fragment?
         val top = fragments.last()
-        top as IKitFragmentAction
+        top as IKitFragment
 
         if (instanceIndex == -1) {
             return
@@ -187,10 +190,13 @@ class Fragmentation : Parcelable {
                 target = fragments[instanceIndex - 1]
             }
         }
-        target as IKitFragmentAction
+        target as IKitFragment
 
         val ft = fragmentManager.beginTransaction()
-        ft.setCustomAnimations(target.getAnimation()?.first.nullOr(0), top.getAnimation()?.second.nullOr(0))
+
+        val transitionAnims = top.transitionAnimation
+        ft.setCustomAnimations(transitionAnims?.first.nullOr(0), transitionAnims?.second.nullOr(0))
+
         for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex)) {
             if (i > 0) {
                 handleFragmentResult(fragments[i], fragments[i-1])
@@ -199,10 +205,9 @@ class Fragmentation : Parcelable {
         }
         ft.show(target)
 
-        if (Build.VERSION.SDK_INT >= 21 && top.getSharedElements().isNotEmpty()) {
-            top.getSharedElements().forEach {
-                Log.i("frag", "tran name = ${it.key}")
-                ft.addSharedElement(it.value, it.key)
+        if (Build.VERSION.SDK_INT >= 21) {
+            top.getShareElementPairs()?.forEach {
+                ft.addSharedElement(it.first, it.second)
             }
         }
 
@@ -217,10 +222,11 @@ class Fragmentation : Parcelable {
         }
         val ft = fragmentManager.beginTransaction()
         val top = fragments.last()
-        top as IKitFragmentAction
-        if (top.getAnimation() != null) {
-            ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
-        }
+        top as IKitFragment
+
+        val transitionAnims = top.transitionAnimation
+        ft.setCustomAnimations(transitionAnims?.first.nullOr(0), transitionAnims?.second.nullOr(0))
+
         for (fragment in fragments) {
             ft.remove(fragment)
         }
@@ -229,7 +235,7 @@ class Fragmentation : Parcelable {
     }
 
     private fun handleFragmentResult(frg: Fragment, preFrg: Fragment) {
-        if (frg is IKitFragmentAction && preFrg is IKitFragmentAction) {
+        if (frg is IKitFragment&& preFrg is IKitFragment) {
             if (frg.fragmentResult != null) {
                 preFrg.onFragmentResult(frg.fragmentResult!!.requestCode,
                         frg.fragmentResult!!.resultCode, frg.fragmentResult!!.data)

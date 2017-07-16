@@ -46,7 +46,7 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     override fun onBackPressed() {
         val top = mFragmentation.getTopFragment(supportFragmentManager)
-        if (top == null || top !is IKitFragmentAction) {
+        if (top == null || top !is IKitFragment) {
             return
         }
         if (top.onBackPress()) {

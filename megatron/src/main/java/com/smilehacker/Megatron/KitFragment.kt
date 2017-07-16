@@ -8,18 +8,17 @@ import com.smilehacker.Megatron.util.DLog
 /**
  * Created by kleist on 16/6/6.
  */
-abstract class KitFragment : Fragment(), IKitFragmentAction {
+abstract class KitFragment(val kitFragmentActor: IKitFragmentActor) : Fragment(), IKitFragment, IKitFragmentActor by kitFragmentActor {
 
     companion object {
         const val KEY_IS_HIDDEN = "key_is_hidden"
     }
 
-    val mFragmentActor by lazy { KitFragmentActor(this) }
-
-    override var fragmentResult: FragmentResult? = mFragmentActor.fragmentResult
-
-    override val hostActivity: HostActivity
-        get() = mFragmentActor.hostActivity
+    constructor() : this(KitFragmentActor()) {
+        if (kitFragmentActor is KitFragmentActor) {
+            kitFragmentActor.fragment = this
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,33 +48,6 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         onVisible()
     }
 
-    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentActor.startFragment(to, bundle, launchMode)
-    }
-
-
-    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentActor.startFragmentForResult(to, bundle, requestCode, launchMode)
-    }
-
-
-    override fun popFragment() {
-        mFragmentActor.popFragment()
-    }
-
-    override fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
-        mFragmentActor.popToFragment(fragment, bundle, includeSelf)
-    }
-
-    override fun finish() {
-        mFragmentActor.finish()
-    }
-
-    override fun setResult(resultCode: Int, data: Bundle?) {
-        mFragmentActor.setResult(resultCode, data)
-
-    }
-
     override fun onNewBundle(bundle: Bundle?) {
     }
 
@@ -84,10 +56,6 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
-    }
-
-    override fun getAnimation(): Pair<Int, Int>? {
-        return null
     }
 
     override fun onVisible() {

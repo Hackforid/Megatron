@@ -7,17 +7,18 @@ import android.view.View
 /**
  * Created by kleist on 16/8/2.
  */
-class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
+class KitFragmentActor() : IKitFragmentActor {
 
     override val hostActivity : HostActivity by lazy { fragment.activity as HostActivity }
     private val mFragmentation : Fragmentation by lazy { hostActivity.mFragmentation }
+    lateinit var fragment : Fragment
 
     override var fragmentResult: FragmentResult? = null
 
-    init {
-        if (fragment !is IKitFragmentAction) {
-            throw IllegalArgumentException("fragment must impl IKitFragmentAction")
-        }
+    private var mShareElementPairs : MutableList<Pair<View, String>>? = null
+
+    constructor(fragment : Fragment) : this() {
+        this.fragment = fragment
     }
 
     override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
@@ -44,9 +45,14 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
     }
 
-    override fun overridePendingTransition(shareElement: View, targetID: Int) {
+    override fun setShareElements(vararg shareElements: Pair<View, String>) {
+        mShareElementPairs = shareElements.toMutableList()
     }
 
-    override fun getSharedElementAnimation(): Pair<View, Int> {
+
+    override fun getShareElementPairs(): MutableList<Pair<View, String>>? {
+        return mShareElementPairs
     }
+
+    override var transitionAnimation: Pair<Int, Int>? = null
 }

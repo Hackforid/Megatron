@@ -1,7 +1,6 @@
 package com.smilehacker.Megatron
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.View
 import com.smilehacker.Megatron.util.DLog
@@ -9,19 +8,11 @@ import com.smilehacker.Megatron.util.DLog
 /**
  * Created by kleist on 16/8/2.
  */
-abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAction {
+abstract class KitPreferenceFragment(val kitFragmentActor: IKitFragmentActor) : PreferenceFragmentCompat(), IKitFragment, IKitFragmentActor by kitFragmentActor {
 
     companion object {
         const val KEY_IS_HIDDEN = "key_is_hidden"
     }
-
-    val mFragmentActor by lazy { KitFragmentActor(this) }
-
-    override var fragmentResult: FragmentResult? = mFragmentActor.fragmentResult
-
-    override val hostActivity: HostActivity
-        get() = mFragmentActor.hostActivity
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
@@ -33,6 +24,12 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
                 ft.show(this)
             }
             ft.commit()
+        }
+    }
+
+    constructor() : this(KitFragmentActor()) {
+        if (kitFragmentActor is KitFragmentActor) {
+            kitFragmentActor.fragment = this
         }
     }
 
@@ -50,33 +47,6 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
         onVisible()
     }
 
-    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentActor.startFragment(to, bundle, launchMode)
-    }
-
-
-    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentActor.startFragmentForResult(to, bundle, requestCode, launchMode)
-    }
-
-
-    override fun popFragment() {
-        mFragmentActor.popFragment()
-    }
-
-    override fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
-        mFragmentActor.popToFragment(fragment, bundle, includeSelf)
-    }
-
-    override fun finish() {
-        mFragmentActor.finish()
-    }
-
-    override fun setResult(resultCode: Int, data: Bundle?) {
-        mFragmentActor.setResult(resultCode, data)
-
-    }
-
     override fun onNewBundle(bundle: Bundle?) {
     }
 
@@ -85,10 +55,6 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
-    }
-
-    override fun getAnimation(): Pair<Int, Int>? {
-        return null
     }
 
     override fun onVisible() {
@@ -110,5 +76,4 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
         }
         DLog.i("===end===")
     }
-
 }

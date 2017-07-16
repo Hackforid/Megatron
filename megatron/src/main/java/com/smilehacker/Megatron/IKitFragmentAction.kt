@@ -1,7 +1,6 @@
 package com.smilehacker.Megatron
 
 import android.os.Bundle
-import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.view.View
 
@@ -45,21 +44,25 @@ interface IKitFragmentActor : IFragmentAction {
 
     var fragmentResult: FragmentResult?
 
-    val hostActivity : HostActivity
+    val hostActivity: HostActivity
 
     fun finish()
 
     fun setResult(resultCode: Int, data: Bundle? = null)
 
-    fun overridePendingTransition(shareElement: View, @IdRes targetID: Int)
+    fun setShareElements(vararg shareElements : Pair<View, String>)
 
-    fun getSharedElementAnimation() : Pair<View, Int>
+
+    fun getShareElementPairs() : MutableList<Pair<View, String>>?
+
+    var transitionAnimation : Pair<Int, Int>?
+
 }
 
 /**
  * interface for fragment
  */
-interface IKitFragmentAction : IKitFragmentActor {
+interface IKitFragmentLifeCycle {
 
     fun onVisible()
 
@@ -67,10 +70,10 @@ interface IKitFragmentAction : IKitFragmentActor {
 
     fun onNewBundle(bundle: Bundle?)
 
-    fun getAnimation() : Pair<Int, Int>?
-
     fun onBackPress() : Boolean
 
     fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?)
 
 }
+
+interface IKitFragment : IKitFragmentActor, IKitFragmentLifeCycle
