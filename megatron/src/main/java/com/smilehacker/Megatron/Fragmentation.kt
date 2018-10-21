@@ -212,7 +212,7 @@ class Fragmentation : Parcelable {
         }
 
         ft.commitNow()
-        mFragmentStack.popTo(target.tag, false)
+        mFragmentStack.popTo(target.tag!!, false)
     }
 
     fun popAll(fragmentManager: FragmentManager) {

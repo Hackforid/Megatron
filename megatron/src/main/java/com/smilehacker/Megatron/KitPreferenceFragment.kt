@@ -17,13 +17,13 @@ abstract class KitPreferenceFragment(val kitFragmentActor: IKitFragmentActor) : 
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
             val isHidden = savedInstanceState.getBoolean(KEY_IS_HIDDEN, false)
-            val ft = fragmentManager.beginTransaction()
+            val ft = fragmentManager?.beginTransaction()
             if (isHidden) {
-                ft.hide(this)
+                ft?.hide(this)
             } else {
-                ft.show(this)
+                ft?.show(this)
             }
-            ft.commit()
+            ft?.commit()
         }
     }
 
@@ -42,7 +42,7 @@ abstract class KitPreferenceFragment(val kitFragmentActor: IKitFragmentActor) : 
         }
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onVisible()
     }
@@ -64,14 +64,14 @@ abstract class KitPreferenceFragment(val kitFragmentActor: IKitFragmentActor) : 
     override fun onInvisible() {
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putBoolean(KEY_IS_HIDDEN, isHidden)
+        outState.putBoolean(KEY_IS_HIDDEN, isHidden)
     }
 
     private fun logFragmentStack() {
         DLog.i("===stack ${hostActivity.mFragmentation.hashCode()} ===")
-        hostActivity.mFragmentation.getFragments(fragmentManager).forEach {
+        hostActivity.mFragmentation.getFragments(fragmentManager!!).forEach {
             DLog.d(it.javaClass.name + ":" + it.tag)
         }
         DLog.i("===end===")
