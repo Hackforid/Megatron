@@ -33,13 +33,14 @@ class Fragmentation : ViewModel() {
         mContainerID = activity.getContainerID()
     }
 
-    inline fun <reified T : Fragment> instanceFragment(bundle: Bundle? = null) : T{
+    inline fun <reified T : Fragment> instanceFragment(bundle: Bundle? = null): T {
         val frg = T::class.java.constructors[0].newInstance() as T
         frg.arguments = bundle
         return frg
     }
 
-    private fun <T: Fragment> newFragment(clazz: Class<T>, bundle: Bundle? = null) : T{
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Fragment> newFragment(clazz: Class<T>, bundle: Bundle? = null): T {
         val frg = clazz.constructors[0].newInstance() as T
         frg.arguments = bundle
         return frg
@@ -51,7 +52,7 @@ class Fragmentation : ViewModel() {
                              startType: Int = START_TYPE.ADD,
                              requestCode: Int = 0) {
 
-        val fragmentTag : String?
+        val fragmentTag: String?
         val top: Fragment?
         if (getStackCount() > 0) {
             top = getTopFragment(fragmentManager)
@@ -89,7 +90,7 @@ class Fragmentation : ViewModel() {
         }
     }
 
-    private fun <T : Fragment>  startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
+    private fun <T : Fragment> startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
         popTo(fragmentManager, to, bundle, false)
     }
 
@@ -140,7 +141,7 @@ class Fragmentation : ViewModel() {
         }
 
         val instanceIndex = mFragmentStack.getSingleTaskInstancePos(fragmentClass)
-        val target : Fragment?
+        val target: Fragment?
         val top = fragments.last()
         top as IKitFragment
 
@@ -176,7 +177,7 @@ class Fragmentation : ViewModel() {
 
         for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex)) {
             if (i > 0) {
-                handleFragmentResult(fragments[i], fragments[i-1])
+                handleFragmentResult(fragments[i], fragments[i - 1])
             }
             ft.remove(fragments[i])
         }
@@ -212,7 +213,7 @@ class Fragmentation : ViewModel() {
     }
 
     private fun handleFragmentResult(frg: Fragment, preFrg: Fragment) {
-        if (frg is IKitFragment&& preFrg is IKitFragment) {
+        if (frg is IKitFragment && preFrg is IKitFragment) {
             if (frg.fragmentResult != null) {
                 preFrg.onFragmentResult(frg.fragmentResult!!.requestCode,
                         frg.fragmentResult!!.resultCode, frg.fragmentResult!!.data)

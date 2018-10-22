@@ -1,31 +1,12 @@
 package com.smilehacker.megatron
 
-import android.os.Parcel
-import android.os.Parcelable
 import android.support.v4.app.Fragment
-import com.smilehacker.megatron.util.createParcel
 import java.util.*
 
 /**
  * Created by zhouquan on 16/6/9.
  */
-class FragmentStack() : Parcelable {
-
-    override fun writeToParcel(p0: Parcel?, p1: Int) {
-        p0?.writeStringList(mFragmentStack)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object {
-        @JvmField @Suppress("unused") val CREATOR = createParcel { FragmentStack(it) }
-    }
-
-    constructor(parcel: Parcel) : this() {
-        parcel.readStringList(mFragmentStack)
-    }
+class FragmentStack() {
 
     private var mFragmentStack : MutableList<String> = ArrayList()
 
