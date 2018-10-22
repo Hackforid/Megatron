@@ -1,41 +1,18 @@
 package com.smilehacker.Megatron
 
+import android.arch.lifecycle.ViewModel
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.smilehacker.Megatron.util.createParcel
 import com.smilehacker.Megatron.util.nullOr
 import java.util.*
 
 /**
  * Created by zhouquan on 16/6/9.
  */
-class Fragmentation : Parcelable {
-
-    override fun writeToParcel(p0: Parcel?, p1: Int) {
-        p0?.writeParcelable(mFragmentStack, 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object {
-        @JvmField @Suppress("unused") val CREATOR = createParcel(::Fragmentation)
-    }
-
-    constructor(parcel: Parcel) : this() {
-        mFragmentStack = parcel.readParcelable(FragmentStack.javaClass.classLoader)
-    }
-
-    constructor() {
-        mFragmentStack = FragmentStack()
-    }
-
+class Fragmentation : ViewModel() {
 
     object START_TYPE {
         const val ADD = 1
@@ -48,7 +25,7 @@ class Fragmentation : Parcelable {
         const val STANDARD = 3
     }
 
-    private var mFragmentStack: FragmentStack
+    private var mFragmentStack: FragmentStack = FragmentStack()
 
     private var mContainerID: Int = 0
 

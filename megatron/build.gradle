@@ -21,6 +21,11 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -31,4 +36,7 @@ dependencies {
     implementation "com.android.support:support-v4:$Versions.androidSupport"
     implementation "com.android.support:preference-v14:$Versions.androidSupport"
     implementation "com.android.support:support-annotations:$Versions.androidSupport"
+
+    implementation Deps.lifecycle
+    implementation Deps.lifecycle_java8
 }

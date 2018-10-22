@@ -1,5 +1,6 @@
 package com.smilehacker.Megatron
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
@@ -10,7 +11,7 @@ import android.view.View
 class KitFragmentActor() : IKitFragmentActor {
 
     override val hostActivity : HostActivity by lazy { fragment.activity as HostActivity }
-    private val mFragmentation : Fragmentation by lazy { hostActivity.mFragmentation }
+    private val mFragmentation : Fragmentation by lazy { ViewModelProviders.of(hostActivity).get(Fragmentation::class.java) }
     lateinit var fragment : Fragment
 
     override var fragmentResult: FragmentResult? = null

@@ -3,7 +3,6 @@ package com.smilehacker.Megatron
 import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.View
-import com.smilehacker.Megatron.util.DLog
 
 /**
  * Created by kleist on 16/8/2.
@@ -70,10 +69,6 @@ abstract class KitPreferenceFragment(val kitFragmentActor: IKitFragmentActor) : 
     }
 
     private fun logFragmentStack() {
-        DLog.i("===stack ${hostActivity.mFragmentation.hashCode()} ===")
-        hostActivity.mFragmentation.getFragments(fragmentManager!!).forEach {
-            DLog.d(it.javaClass.name + ":" + it.tag)
-        }
-        DLog.i("===end===")
+        hostActivity.logFragmentStack()
     }
 }

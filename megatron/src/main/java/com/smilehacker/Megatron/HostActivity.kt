@@ -1,31 +1,24 @@
 package com.smilehacker.Megatron
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import com.smilehacker.Megatron.util.DLog
 
 /**
  * Created by kleist on 16/6/6.
  */
 abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
-    companion object {
-        const val KEY_FRAGMENTATION = "key_fragmentation"
-    }
-
     abstract fun getContainerID() : Int
 
-    lateinit var mFragmentation : Fragmentation
+    private lateinit var mFragmentation : Fragmentation
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            mFragmentation = savedInstanceState.getParcelable(KEY_FRAGMENTATION)
-            mFragmentation.init(this)
-        } else {
-            mFragmentation = Fragmentation()
-            mFragmentation.init(this)
-        }
         super.onCreate(savedInstanceState)
+        mFragmentation = ViewModelProviders.of(this).get(Fragmentation::class.java)
+        mFragmentation.init(this)
     }
 
     override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
@@ -54,14 +47,19 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         }
 
         if (mFragmentation.getStackCount() > 1) {
-            mFragmentation.finish(supportFragmentManager, top!!)
+            mFragmentation.finish(supportFragmentManager, top)
         } else {
             finish()
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState?.putParcelable(KEY_FRAGMENTATION, mFragmentation)
+    fun logFragmentStack() {
+        DLog.i("===stack ${mFragmentation.hashCode()} ===")
+        supportFragmentManager?.let {
+            mFragmentation.getFragments(it).forEach {
+                DLog.d(it.javaClass.name + ":" + it.tag)
+            }
+        }
+        DLog.i("===end===")
     }
 }

@@ -5,10 +5,11 @@ object Versions {
 
     val kotlin = "1.2.71"
     val androidSupport = "28.0.0"
+    val lifecycle = "1.1.1"
 }
 
 object Deps {
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
-
-
+    val lifecycle = "android.arch.lifecycle:extensions:${Versions.lifecycle}"
+    val lifecycle_java8 = "android.arch.lifecycle:common-java8:${Versions.lifecycle}"
 }

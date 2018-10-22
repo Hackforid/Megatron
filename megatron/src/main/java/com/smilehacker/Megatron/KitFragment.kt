@@ -3,7 +3,6 @@ package com.smilehacker.Megatron
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
-import com.smilehacker.Megatron.util.DLog
 
 /**
  * Created by kleist on 16/6/6.
@@ -72,12 +71,6 @@ abstract class KitFragment(val kitFragmentActor: IKitFragmentActor) : Fragment()
 
 
     private fun logFragmentStack() {
-        DLog.i("===stack ${hostActivity.mFragmentation.hashCode()} ===")
-        fragmentManager?.let {
-            hostActivity.mFragmentation.getFragments(it).forEach {
-                DLog.d(it.javaClass.name + ":" + it.tag)
-            }
-        }
-        DLog.i("===end===")
+        hostActivity.logFragmentStack()
     }
 }
