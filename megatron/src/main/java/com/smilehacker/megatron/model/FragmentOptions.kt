@@ -1,4 +1,4 @@
-package com.smilehacker.Megatron.model
+package com.smilehacker.megatron.model
 
 import android.view.View
 

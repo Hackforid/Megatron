@@ -1,4 +1,4 @@
-package com.smilehacker.Megatron.model
+package com.smilehacker.megatron.model
 
 import android.annotation.TargetApi
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.smilehacker.Megatron
+package com.smilehacker.megatron
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.smilehacker.Megatron
+package com.smilehacker.megatron
 
 import android.arch.lifecycle.ViewModel
 import android.os.Build
@@ -6,7 +6,7 @@ import android.os.Build.VERSION
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.smilehacker.Megatron.util.nullOr
+import com.smilehacker.megatron.util.nullOr
 import java.util.*
 
 /**

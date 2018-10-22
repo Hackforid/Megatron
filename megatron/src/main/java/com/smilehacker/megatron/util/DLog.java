@@ -1,8 +1,8 @@
-package com.smilehacker.Megatron.util;
+package com.smilehacker.megatron.util;
 
 import android.util.Log;
 
-import com.smilehacker.Megatron.BuildConfig;
+import com.smilehacker.megatron.BuildConfig;
 
 
 /**

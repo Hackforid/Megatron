@@ -1,4 +1,4 @@
-package com.smilehacker.Megatron
+package com.smilehacker.megatron
 
 /**
  * Created by zhouquan on 17/7/16.

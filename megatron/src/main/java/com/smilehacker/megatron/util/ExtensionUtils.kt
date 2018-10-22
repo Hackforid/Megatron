@@ -1,4 +1,4 @@
-package com.smilehacker.Megatron.util
+package com.smilehacker.megatron.util
 
 /**
  * Created by kleist on 16/8/3.

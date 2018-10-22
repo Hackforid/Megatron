@@ -1,9 +1,9 @@
-package com.smilehacker.Megatron
+package com.smilehacker.megatron
 
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
-import com.smilehacker.Megatron.util.createParcel
+import com.smilehacker.megatron.util.createParcel
 import java.util.*
 
 /**
