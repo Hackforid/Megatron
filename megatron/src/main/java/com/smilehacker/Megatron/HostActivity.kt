@@ -64,12 +64,4 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         super.onSaveInstanceState(outState)
         outState?.putParcelable(KEY_FRAGMENTATION, mFragmentation)
     }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
-    override fun onResumeFragments() {
-        super.onResumeFragments()
-    }
 }
