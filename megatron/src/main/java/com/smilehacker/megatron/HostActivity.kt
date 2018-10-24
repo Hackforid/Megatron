@@ -21,19 +21,19 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         mFragmentation.init(this)
     }
 
-    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
+    override fun <T : KitFragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, to, bundle, launchMode, null)
     }
 
-    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, to, bundle, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
+    override fun <T : KitFragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, to, bundle, requestCode)
     }
 
     override fun popFragment() {
         onBackPressed()
     }
 
-    override fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
+    override fun <T : KitFragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
         mFragmentation.popTo(supportFragmentManager, fragment, bundle, includeSelf)
     }
 

@@ -1,7 +1,6 @@
 package com.smilehacker.megatron
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.View
 
 /**
@@ -25,16 +24,16 @@ interface IFragmentAction {
 
     }
 
-    fun <T : Fragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+    fun <T : KitFragment> startFragment(to : Class<T>, bundle: Bundle? = null,
+                                     launchMode : Int = Fragmentation.LAUNCH_MODE.STANDARD)
 
 
-    fun <T : Fragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+    fun <T : KitFragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
+                                              requestCode: Int, launchMode : Int = Fragmentation.LAUNCH_MODE.STANDARD)
 
     fun popFragment()
 
-    fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false)
+    fun <T : KitFragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false)
 }
 
 /**

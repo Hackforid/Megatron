@@ -14,19 +14,13 @@ import java.util.*
  */
 class Fragmentation : ViewModel() {
 
-    object START_TYPE {
-        const val ADD = 1
-        const val ADD_WITH_RESULT = 2
-    }
-
     object LAUNCH_MODE {
         const val SINGLE_TOP = 1
-        const val SINGLE_TASK = 2
+        const val CLEAR_TOP = 2
         const val STANDARD = 3
     }
 
     private var mFragmentStack: FragmentStack = FragmentStack()
-
     private var mContainerID: Int = 0
 
     fun init(activity: HostActivity) {
@@ -46,14 +40,13 @@ class Fragmentation : ViewModel() {
         return frg
     }
 
-    fun <T : Fragment> start(fragmentManager: FragmentManager, to: Class<T>,
+    fun <T : KitFragment> start(fragmentManager: FragmentManager, to: Class<T>,
                              bundle: Bundle? = null,
                              launchMode: Int = LAUNCH_MODE.STANDARD,
-                             startType: Int = START_TYPE.ADD,
-                             requestCode: Int = 0) {
+                             requestCode: Int? = null) {
 
         val fragmentTag: String?
-        val top: Fragment?
+        val top: KitFragment?
         if (getStackCount() > 0) {
             top = getTopFragment(fragmentManager)
         } else {
@@ -64,25 +57,24 @@ class Fragmentation : ViewModel() {
             LAUNCH_MODE.STANDARD -> {
                 fragmentTag = mFragmentStack.getNewFragmentName(to)
                 mFragmentStack.putStandard(fragmentTag)
-                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
+                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, requestCode)
             }
             LAUNCH_MODE.SINGLE_TOP -> {
                 if (top != null && top.javaClass == to) {
-                    top as IKitFragment
                     top.onNewBundle(bundle)
                 } else {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
                     mFragmentStack.putStandard(fragmentTag)
-                    startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
+                    startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, requestCode)
                 }
             }
-            LAUNCH_MODE.SINGLE_TASK -> {
+            LAUNCH_MODE.CLEAR_TOP -> {
 
                 val instanceIndex = mFragmentStack.getSingleTaskInstancePos(to)
                 if (instanceIndex == -1) {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
                     mFragmentStack.putStandard(fragmentTag)
-                    startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
+                    startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, requestCode)
                 } else {
                     startSingleTask(fragmentManager, to, bundle)
                 }
@@ -90,51 +82,46 @@ class Fragmentation : ViewModel() {
         }
     }
 
-    private fun <T : Fragment> startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
+    private fun <T : KitFragment> startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
         popTo(fragmentManager, to, bundle, false)
     }
 
-    private fun startStandard(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
+    private fun startStandard(fragmentManager: FragmentManager, from: KitFragment?, to: KitFragment,
                               toTag: String,
-                              startType: Int = START_TYPE.ADD,
-                              requestCode: Int = 0
-    ) {
-        if (to !is IKitFragment) {
-            throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
-        }
-        when (startType) {
-            START_TYPE.ADD_WITH_RESULT -> {
-                to.fragmentResult = FragmentResult(requestCode)
-            }
+                              requestCode: Int? = null) {
+        if (requestCode != null) {
+            to.fragmentResult = FragmentResult(requestCode)
         }
 
         val ft = fragmentManager.beginTransaction()
-        if (from is IKitFragment) {
-            val transitionAnims = from.transitionAnimation
-            ft.setCustomAnimations(transitionAnims?.first.nullOr(0), transitionAnims?.second.nullOr(0))
-        }
 
         if (from != null) {
+            // set transition  animation
+            val transitionAnims = from.transitionAnimation
+            ft.setCustomAnimations(transitionAnims?.first.nullOr(0), transitionAnims?.second.nullOr(0))
+
             ft.hide(from)
-            ft.add(mContainerID, to, toTag)
-        } else {
-            ft.add(mContainerID, to, toTag)
         }
-        if (VERSION.SDK_INT >= 21 && from != null && from is IKitFragmentActor) {
+
+        ft.add(mContainerID, to, toTag)
+
+        // set share elements
+        if (VERSION.SDK_INT >= 21 && from != null) {
             from.getShareElementPairs()?.forEach {
                 ft.addSharedElement(it.first, it.second)
             }
         }
+
         ft.commitNow()
     }
 
 
-    fun finish(fragmentManager: FragmentManager, fragment: Fragment) {
+    fun finish(fragmentManager: FragmentManager, fragment: KitFragment) {
         popTo(fragmentManager, fragment.javaClass, null, true)
     }
 
 
-    fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false) {
+    fun <T : KitFragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false) {
         val fragments = getFragments(fragmentManager)
         if (fragments.isEmpty()) {
             return
@@ -236,10 +223,10 @@ class Fragmentation : ViewModel() {
         return mFragmentStack.getStackCount()
     }
 
-    fun getTopFragment(fragmentManager: FragmentManager): Fragment? {
+    fun getTopFragment(fragmentManager: FragmentManager): KitFragment? {
         val frgTags = mFragmentStack.getFragments()
         if (frgTags.size > 0) {
-            return fragmentManager.findFragmentByTag(frgTags.last())
+            return fragmentManager.findFragmentByTag(frgTags.last()) as? KitFragment
         } else {
             return null
         }

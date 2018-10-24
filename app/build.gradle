@@ -31,4 +31,15 @@ dependencies {
     implementation Deps.kotlin
     implementation "com.android.support:appcompat-v7:$Versions.androidSupport"
     implementation project(":megatron")
+
+    def anko_version = "0.10.7"
+
+    // Anko Commons
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+
+    // Anko Layouts
+    implementation "org.jetbrains.anko:anko-sdk15:$anko_version" // sdk15, sdk19, sdk21, sdk23 are also available
+    implementation("org.jetbrains.anko:anko-appcompat-v7:$anko_version") {
+        exclude group: "com.android.support"
+    }
 }

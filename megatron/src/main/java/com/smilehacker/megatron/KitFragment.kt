@@ -1,5 +1,6 @@
 package com.smilehacker.megatron
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
@@ -7,17 +8,18 @@ import android.view.View
 /**
  * Created by kleist on 16/6/6.
  */
-abstract class KitFragment(val kitFragmentActor: IKitFragmentActor) : Fragment(), IKitFragment, IKitFragmentActor by kitFragmentActor {
+abstract class KitFragment : Fragment(), IKitFragment {
 
     companion object {
-        const val KEY_IS_HIDDEN = "key_is_hidden"
+        private const val KEY_IS_HIDDEN = "key_is_hidden"
     }
 
-    constructor() : this(KitFragmentActor()) {
-        if (kitFragmentActor is KitFragmentActor) {
-            kitFragmentActor.fragment = this
-        }
-    }
+    override val hostActivity: HostActivity by lazy { activity as HostActivity }
+    private val mFragmentation: Fragmentation by lazy { ViewModelProviders.of(hostActivity).get(Fragmentation::class.java) }
+
+    override var fragmentResult: FragmentResult? = null
+
+    private var mShareElementPairs: MutableList<Pair<View, String>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,4 +75,41 @@ abstract class KitFragment(val kitFragmentActor: IKitFragmentActor) : Fragment()
     private fun logFragmentStack() {
         hostActivity.logFragmentStack()
     }
+
+    override fun <T : KitFragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(fragmentManager!!, to, bundle, launchMode)
+    }
+
+    override fun <T : KitFragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentation.start(fragmentManager!!, to, bundle, launchMode, requestCode)
+    }
+
+
+    override fun popFragment() {
+        finish()
+    }
+
+    override fun <T : KitFragment> popToFragment(to: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
+        mFragmentation.popTo(fragmentManager!!, to, bundle, includeSelf)
+    }
+
+    override fun finish() {
+        mFragmentation.finish(fragmentManager!!, this)
+    }
+
+    override fun setResult(resultCode: Int, data: Bundle?) {
+        fragmentResult?.let { it.data = data; it.resultCode = resultCode }
+    }
+
+    override fun setShareElements(vararg shareElements: Pair<View, String>) {
+        mShareElementPairs = shareElements.toMutableList()
+    }
+
+
+    override fun getShareElementPairs(): MutableList<Pair<View, String>>? {
+        return mShareElementPairs
+    }
+
+    override var transitionAnimation: Pair<Int, Int>? = null
+
 }

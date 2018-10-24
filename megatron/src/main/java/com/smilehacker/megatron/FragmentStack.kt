@@ -6,7 +6,7 @@ import java.util.*
 /**
  * Created by zhouquan on 16/6/9.
  */
-class FragmentStack() {
+class FragmentStack {
 
     private var mFragmentStack : MutableList<String> = ArrayList()
 
@@ -63,7 +63,7 @@ class FragmentStack() {
             }
         }
 
-        return "$className${index+1}"
+        return "${className}$$${index+1}"
     }
 
     fun getNewFragmentName(fragment : Fragment) : String {
