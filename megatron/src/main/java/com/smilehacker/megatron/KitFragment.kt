@@ -12,18 +12,28 @@ abstract class KitFragment : Fragment(), IKitFragment {
 
     companion object {
         private const val KEY_IS_HIDDEN = "key_is_hidden"
+
+        internal const val KEY_REQUEST_CODE = "key_request_code"
+        internal const val KEY_SOURCE_FRAGMENT_TAG = "key_source_fragment_tag"
     }
 
     override val hostActivity: HostActivity by lazy { activity as HostActivity }
-    private val mFragmentation: Fragmentation by lazy { ViewModelProviders.of(hostActivity).get(Fragmentation::class.java) }
+    private val mFragmentController: FragmentController by lazy { ViewModelProviders.of(hostActivity).get(FragmentController::class.java) }
 
-    override var fragmentResult: FragmentResult? = null
+    internal var fragmentResult: FragmentResult? = FragmentResult(IFragmentAction.RESULT_CANCELED)
 
     private var mShareElementPairs: MutableList<Pair<View, String>>? = null
+
+    private var mRequestCode : Int = -1
+    private var mSourceFragmentTag: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
+
+            mRequestCode = savedInstanceState.getInt(KEY_REQUEST_CODE)
+            mSourceFragmentTag = savedInstanceState.getString(KEY_SOURCE_FRAGMENT_TAG)
+
             val isHidden = savedInstanceState.getBoolean(KEY_IS_HIDDEN, false)
             val ft = fragmentManager?.beginTransaction()
             if (isHidden) {
@@ -77,28 +87,19 @@ abstract class KitFragment : Fragment(), IKitFragment {
     }
 
     override fun <T : KitFragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentation.start(fragmentManager!!, to, bundle, launchMode)
+        mFragmentController.start(this, to, bundle ?: Bundle(), launchMode)
     }
 
     override fun <T : KitFragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(fragmentManager!!, to, bundle, launchMode, requestCode)
-    }
-
-
-    override fun popFragment() {
-        finish()
-    }
-
-    override fun <T : KitFragment> popToFragment(to: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
-        mFragmentation.popTo(fragmentManager!!, to, bundle, includeSelf)
+        mFragmentController.start(this, to, bundle ?: Bundle(), launchMode, requestCode)
     }
 
     override fun finish() {
-        mFragmentation.finish(fragmentManager!!, this)
+        mFragmentController.finish(fragmentManager!!, this)
     }
 
     override fun setResult(resultCode: Int, data: Bundle?) {
-        fragmentResult?.let { it.data = data; it.resultCode = resultCode }
+        fragmentResult = FragmentResult(resultCode, data)
     }
 
     override fun setShareElements(vararg shareElements: Pair<View, String>) {
@@ -112,4 +113,12 @@ abstract class KitFragment : Fragment(), IKitFragment {
 
     override var transitionAnimation: Pair<Int, Int>? = null
 
+    internal fun getRequestCode() = mRequestCode
+    internal fun getSourceFragmentTag() = mSourceFragmentTag
+    internal fun setRequestCode(requestCode: Int) {
+        mRequestCode = requestCode
+    }
+    internal fun setFromFragmentTag(tag: String?) {
+        mSourceFragmentTag = tag
+    }
 }

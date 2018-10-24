@@ -1,14 +1,18 @@
 package com.smilehacker.megatronsample.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.smilehacker.megatron.KitFragment
+import com.smilehacker.megatronsample.act.Act1
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.button
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.support.v4.UI
+import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * Created by quan.zhou on 2018/10/24.
@@ -20,13 +24,31 @@ class AFragment: KitFragment() {
             linearLayout {
                 backgroundColorResource = android.R.color.holo_red_light
 
+                orientation = LinearLayout.VERTICAL
+
                 button("to B") {
                    setOnClickListener {
                        startFragment(BFragment::class.java)
                    }
                 }
+
+                button("to B for result") {
+                    setOnClickListener {
+                        startFragmentForResult(BFragment::class.java, requestCode = 10086)
+                    }
+                }
+
+                button("start 2") {
+                    setOnClickListener {
+                        startActivity<Act1>()
+                    }
+                }
             }
         }.view
     }
 
+    override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
+        super.onFragmentResult(requestCode, resultCode, data)
+        Log.i("A", "onFrgResult $requestCode $resultCode $data")
+    }
 }

@@ -13,16 +13,16 @@ import org.jetbrains.anko.support.v4.UI
 /**
  * Created by quan.zhou on 2018/10/24.
  */
-class BFragment: KitFragment() {
+class CFragment: KitFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return UI {
             linearLayout {
-                backgroundColorResource = android.R.color.holo_green_light
+                backgroundColorResource = android.R.color.holo_blue_light
 
-                button("to C") {
+                button("to A") {
                     setOnClickListener {
-                        startFragment(CFragment::class.java)
+                        startFragment(AFragment::class.java)
                     }
                 }
             }

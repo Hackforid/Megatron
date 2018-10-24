@@ -25,23 +25,17 @@ interface IFragmentAction {
     }
 
     fun <T : KitFragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = Fragmentation.LAUNCH_MODE.STANDARD)
+                                     launchMode : Int = FragmentController.LAUNCH_MODE.STANDARD)
 
 
     fun <T : KitFragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = Fragmentation.LAUNCH_MODE.STANDARD)
-
-    fun popFragment()
-
-    fun <T : KitFragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false)
+                                              requestCode: Int, launchMode : Int = FragmentController.LAUNCH_MODE.STANDARD)
 }
 
-/**
- * interface for fragment delegate
- */
-interface IKitFragmentActor : IFragmentAction {
 
-    var fragmentResult: FragmentResult?
+internal interface IKitFragment : IFragmentAction {
+
+
 
     val hostActivity: HostActivity
 
@@ -56,13 +50,6 @@ interface IKitFragmentActor : IFragmentAction {
 
     var transitionAnimation : Pair<Int, Int>?
 
-}
-
-/**
- * interface for fragment
- */
-interface IKitFragmentLifeCycle {
-
     fun onVisible()
 
     fun onInvisible()
@@ -72,7 +59,4 @@ interface IKitFragmentLifeCycle {
     fun onBackPress() : Boolean
 
     fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?)
-
 }
-
-interface IKitFragment : IKitFragmentActor, IKitFragmentLifeCycle

@@ -8,6 +8,10 @@ import java.util.*
  */
 class FragmentStack {
 
+    companion object {
+        private const val TAG_SPLITER = "$$"
+    }
+
     private var mFragmentStack : MutableList<String> = ArrayList()
 
     fun getFragments() = mFragmentStack
@@ -57,8 +61,12 @@ class FragmentStack {
         val className =  clazz.name
         var index = 0
         for (tag in mFragmentStack.asReversed()) {
-            if (tag.startsWith(className)) {
-                index = tag.substring(className.length).toInt()
+            val keys = tag.split("$$")
+            if (keys.size != 2) {
+                continue
+            }
+            if (keys[0] == className) {
+                index = keys[1].toInt()
                 break
             }
         }
