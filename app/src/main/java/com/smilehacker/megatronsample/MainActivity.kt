@@ -14,7 +14,9 @@ class MainActivity : HostActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        init()
+        if (savedInstanceState == null) {
+            init()
+        }
     }
 
     private fun init() {

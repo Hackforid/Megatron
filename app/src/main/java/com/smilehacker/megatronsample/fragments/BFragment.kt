@@ -1,6 +1,8 @@
 package com.smilehacker.megatronsample.fragments
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +24,10 @@ class BFragment: KitFragment() {
 
                 button("to C") {
                     setOnClickListener {
-                        push(CFragment())
+                        val data = push(CFragment())
+                        data.observe(this@BFragment, Observer {
+                            Log.i("BFragment", "getResult from C ${it?.getString("result")}")
+                        })
                     }
                 }
             }

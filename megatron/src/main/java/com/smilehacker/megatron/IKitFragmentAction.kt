@@ -1,5 +1,6 @@
 package com.smilehacker.megatron
 
+import android.arch.lifecycle.LiveData
 import android.os.Bundle
 import android.view.View
 
@@ -15,20 +16,13 @@ interface IFragmentAction {
 
         val RESULT_CANCELED = 0
         val RESULT_OK = 1
-
-        val STATE_SAVE_ENTER = "state_save_enter"
-        val STATE_SAVE_EXIT = "state_save_exit"
-        val STATE_SAVE_POP_ENTER = "state_save_pop_enter"
-
-        val STATE_SAVE_POP_EXIT = "state_save_pop_exit"
-
     }
 
-    fun push(fragment: KitFragment)
+    fun push(fragment: KitFragment) : LiveData<Bundle>
 
-    fun pop(fragment: KitFragment, data: FragmentResult? = null)
+    fun pop(fragment: KitFragment)
 
-    fun popTo(fragment: KitFragment, data: FragmentResult? = null)
+    fun popTo(fragment: KitFragment)
 }
 
 
@@ -38,12 +32,7 @@ internal interface IKitFragment : IFragmentAction {
 
     val hostActivity: HostActivity
 
-    fun finish()
-
-    fun setResult(resultCode: Int, data: Bundle? = null)
-
     fun setShareElements(vararg shareElements : Pair<View, String>)
-
 
     fun getShareElementPairs() : MutableList<Pair<View, String>>?
 
@@ -53,9 +42,5 @@ internal interface IKitFragment : IFragmentAction {
 
     fun onInvisible()
 
-    fun onNewBundle(bundle: Bundle?)
-
     fun onBackPress() : Boolean
-
-    fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?)
 }

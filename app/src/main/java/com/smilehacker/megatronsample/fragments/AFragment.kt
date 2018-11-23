@@ -1,7 +1,6 @@
 package com.smilehacker.megatronsample.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,8 +47,4 @@ class AFragment: KitFragment() {
         }.view
     }
 
-    override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
-        super.onFragmentResult(requestCode, resultCode, data)
-        Log.i("A", "onFrgResult $requestCode $resultCode $data")
-    }
 }

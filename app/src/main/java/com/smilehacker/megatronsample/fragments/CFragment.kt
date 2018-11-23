@@ -16,6 +16,9 @@ import org.jetbrains.anko.support.v4.UI
 class CFragment: KitFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val bundle = Bundle()
+        bundle.putString("result", "heihei")
+        setResult(bundle)
         return UI {
             linearLayout {
                 backgroundColorResource = android.R.color.holo_blue_light
@@ -23,7 +26,6 @@ class CFragment: KitFragment() {
                 button("to A") {
                     setOnClickListener {
                         val a  = getNavigator().getFragments().first()
-
                         popTo(a)
                     }
                 }

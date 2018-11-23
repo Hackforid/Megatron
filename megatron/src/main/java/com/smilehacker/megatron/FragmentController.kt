@@ -60,7 +60,7 @@ class FragmentController : ViewModel() {
             LAUNCH_MODE.SINGLE_TOP -> {
                 val top = getTopFragment(fragmentManager)
                 if (top != null && top.javaClass == to) {
-                    top.onNewBundle(bundle)
+//                    top.onNewBundle(bundle)
                 } else {
                     startStandard(fragmentManager, from, to, bundle, requestCode)
                 }
@@ -86,8 +86,8 @@ class FragmentController : ViewModel() {
         val toTag = mFragmentStack.getNewFragmentName(toFrgClazz)
         mFragmentStack.putStandard(toTag)
         val to= newFragment(toFrgClazz, bundle)
-        to.setRequestCode(requestCode)
-        to.setFromFragmentTag(from?.tag)
+//        to.setRequestCode(requestCode)
+//        to.setFromFragmentTag(from?.tag)
 
         val ft = fragmentManager.beginTransaction()
 
@@ -135,7 +135,7 @@ class FragmentController : ViewModel() {
         val top = fragments.last()
 
         if (to == top && !includeSelf) {
-            to.onNewBundle(bundle)
+//            to.onNewBundle(bundle)
             return
         }
 
@@ -186,7 +186,7 @@ class FragmentController : ViewModel() {
         val top = fragments.last()
 
         if (instanceIndex == fragments.lastIndex && !includeSelf) {
-            top.onNewBundle(bundle)
+//            top.onNewBundle(bundle)
             return
         }
 
@@ -245,14 +245,14 @@ class FragmentController : ViewModel() {
     }
 
     private fun handleFragmentResult(fragmentManager: FragmentManager, fragment: KitFragment) {
-        val requestCode = fragment.getRequestCode()
-        val sourceFragmentTag = fragment.getSourceFragmentTag()
-        if (requestCode > 0 && sourceFragmentTag != null && fragment.fragmentResult != null) {
-            val source = fragmentManager.findFragmentByTag(sourceFragmentTag)
-            if (source != null && source is KitFragment) {
-                source.onFragmentResult(requestCode, fragment.fragmentResult!!.resultCode, fragment.fragmentResult!!.data)
-            }
-        }
+//        val requestCode = fragment.getRequestCode()
+//        val sourceFragmentTag = fragment.getSourceFragmentTag()
+//        if (requestCode > 0 && sourceFragmentTag != null && fragment.fragmentResult != null) {
+//            val source = fragmentManager.findFragmentByTag(sourceFragmentTag)
+//            if (source != null && source is KitFragment) {
+////                source.onFragmentResult(requestCode, fragment.fragmentResult!!.resultCode, fragment.fragmentResult!!.data)
+//            }
+//        }
     }
 
     fun getFragments(fragmentManager: FragmentManager): List<KitFragment> {
