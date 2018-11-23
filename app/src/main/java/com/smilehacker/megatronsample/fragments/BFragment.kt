@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.smilehacker.megatron.KitFragment
+import com.smilehacker.megatronsample.R
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.button
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.support.v4.UI
-import com.smilehacker.megatronsample.R
 
 /**
  * Created by quan.zhou on 2018/10/24.
@@ -36,6 +36,6 @@ class BFragment: KitFragment() {
     }
 
     init {
-        transitionAnimation = R.anim.frg_slide_in_from_bottom to R.anim.frg_slide_out_from_bottom
+        transitionAnimation = R.anim.alpha_in to R.anim.frg_slide_out_from_bottom
     }
 }

@@ -49,6 +49,6 @@ class AFragment: KitFragment() {
     }
 
     init {
-        transitionAnimation = R.anim.frg_slide_in_from_bottom to R.anim.frg_slide_out_from_bottom
+        transitionAnimation = R.anim.alpha_in to R.anim.alpha_out
     }
 }

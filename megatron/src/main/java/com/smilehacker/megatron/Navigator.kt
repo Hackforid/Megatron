@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
+import android.view.View
 import java.lang.ref.WeakReference
 
 /**
@@ -107,28 +108,29 @@ class Navigator: ViewModel() {
         val tag = fragment.tag ?: throw IllegalStateException("Fragment $fragment not added")
 
         val ft = fragmentManager.beginTransaction()
+        fragment?.transitionAnimation?.let { ft.setCustomAnimations(it.first, it.second, it.first, it.second) }
         val index = mFragmentStack.getFragments().indexOf(tag)
         if (index < 0) {
             throw IllegalStateException("Fragment $fragment not added")
         }
         if (mFragmentStack.getTopFragment() == tag) { // 如果在顶上
             // 如果栈里只有这个fragment
-            ft.remove(fragment)
             if (mFragmentStack.getFragments().size == 1) {
                 mStackCleared.value = true
                 return
             } else {
                 val previewsFragment = fragmentManager.findFragmentByTag(mFragmentStack.getFragments()[index - 1]) as? KitFragment
                 previewsFragment?.let {
+                    it.view?.visibility = View.VISIBLE
                     ft.show(it)
                 }
             }
+            ft.remove(fragment)
         } else { // 如果不在顶上
             ft.remove(fragment)
         }
         fragment.handleClose()
         mFragmentStack.getFragments().remove(tag)
-        fragment?.transitionAnimation?.let { ft.setCustomAnimations(it.first, it.second) }
         ft.commitNowAllowingStateLoss()
     }
 
