@@ -81,6 +81,9 @@ class Navigator: ViewModel() {
 
         previewsFragment = fragmentManager.findFragmentByTag(mFragmentStack.getTopFragment()) as? KitFragment
         val ft = fragmentManager.beginTransaction()
+        fragment.transitionAnimation?.let {
+            ft.setCustomAnimations(it.first, it.second)
+        }
         if (previewsFragment != null) {
             ft.hide(previewsFragment)
         }
@@ -125,6 +128,7 @@ class Navigator: ViewModel() {
         }
         fragment.handleClose()
         mFragmentStack.getFragments().remove(tag)
+        fragment?.transitionAnimation?.let { ft.setCustomAnimations(it.first, it.second) }
         ft.commitNowAllowingStateLoss()
     }
 

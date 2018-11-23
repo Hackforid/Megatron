@@ -145,7 +145,7 @@ abstract class KitFragment : Fragment(), IKitFragment {
     }
 
 
-    override fun getShareElementPairs(): MutableList<Pair<View, String>>? {
+    override fun getShareElements(): MutableList<Pair<View, String>>? {
         return mShareElementPairs
     }
 

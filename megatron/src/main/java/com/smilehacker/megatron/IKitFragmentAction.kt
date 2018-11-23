@@ -34,8 +34,12 @@ internal interface IKitFragment : IFragmentAction {
 
     fun setShareElements(vararg shareElements : Pair<View, String>)
 
-    fun getShareElementPairs() : MutableList<Pair<View, String>>?
+    fun getShareElements() : MutableList<Pair<View, String>>?
 
+    /**
+     * first enter
+     * second exit
+     */
     var transitionAnimation : Pair<Int, Int>?
 
     fun onVisible()

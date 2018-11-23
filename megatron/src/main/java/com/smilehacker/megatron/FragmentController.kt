@@ -104,7 +104,7 @@ class FragmentController : ViewModel() {
 
         // set share elements
         if (VERSION.SDK_INT >= 21 && from != null) {
-            from.getShareElementPairs()?.forEach {
+            from.getShareElements()?.forEach {
                 ft.addSharedElement(it.first, it.second)
             }
         }
@@ -163,7 +163,7 @@ class FragmentController : ViewModel() {
         ft.show(target)
 
         if (Build.VERSION.SDK_INT >= 21) {
-            top.getShareElementPairs()?.forEach {
+            top.getShareElements()?.forEach {
                 ft.addSharedElement(it.first, it.second)
             }
         }
@@ -217,7 +217,7 @@ class FragmentController : ViewModel() {
         ft.show(target)
 
         if (Build.VERSION.SDK_INT >= 21) {
-            top.getShareElementPairs()?.forEach {
+            top.getShareElements()?.forEach {
                 ft.addSharedElement(it.first, it.second)
             }
         }

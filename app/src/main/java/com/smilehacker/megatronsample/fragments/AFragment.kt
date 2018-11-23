@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.smilehacker.megatron.KitFragment
+import com.smilehacker.megatronsample.R
 import com.smilehacker.megatronsample.act.Act1
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.button
@@ -47,4 +48,7 @@ class AFragment: KitFragment() {
         }.view
     }
 
+    init {
+        transitionAnimation = R.anim.frg_slide_in_from_bottom to R.anim.frg_slide_out_from_bottom
+    }
 }

@@ -11,6 +11,7 @@ import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.button
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.support.v4.UI
+import com.smilehacker.megatronsample.R
 
 /**
  * Created by quan.zhou on 2018/10/24.
@@ -34,4 +35,7 @@ class BFragment: KitFragment() {
         }.view
     }
 
+    init {
+        transitionAnimation = R.anim.frg_slide_in_from_bottom to R.anim.frg_slide_out_from_bottom
+    }
 }
