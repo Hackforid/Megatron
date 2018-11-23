@@ -22,7 +22,9 @@ class CFragment: KitFragment() {
 
                 button("to A") {
                     setOnClickListener {
-                        startFragment(AFragment::class.java)
+                        val a  = getNavigator().getFragments().first()
+
+                        popTo(a)
                     }
                 }
             }

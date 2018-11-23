@@ -28,13 +28,14 @@ class AFragment: KitFragment() {
 
                 button("to B") {
                    setOnClickListener {
-                       startFragment(BFragment::class.java)
+                       push(BFragment())
                    }
                 }
 
                 button("to B for result") {
                     setOnClickListener {
-                        startFragmentForResult(BFragment::class.java, requestCode = 10086)
+                        push(BFragment())
+
                     }
                 }
 

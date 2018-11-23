@@ -24,12 +24,11 @@ interface IFragmentAction {
 
     }
 
-    fun <T : KitFragment> startFragment(to : Class<T>, bundle: Bundle? = null,
-                                     launchMode : Int = FragmentController.LAUNCH_MODE.STANDARD)
+    fun push(fragment: KitFragment)
 
+    fun pop(fragment: KitFragment, data: FragmentResult? = null)
 
-    fun <T : KitFragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
-                                              requestCode: Int, launchMode : Int = FragmentController.LAUNCH_MODE.STANDARD)
+    fun popTo(fragment: KitFragment, data: FragmentResult? = null)
 }
 
 

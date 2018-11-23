@@ -18,7 +18,7 @@ abstract class KitFragment : Fragment(), IKitFragment {
     }
 
     override val hostActivity: HostActivity by lazy { activity as HostActivity }
-    private val mFragmentController: FragmentController by lazy { ViewModelProviders.of(hostActivity).get(FragmentController::class.java) }
+    private val mNavigator: Navigator by lazy { ViewModelProviders.of(hostActivity).get(Navigator::class.java) }
 
     internal var fragmentResult: FragmentResult? = FragmentResult(IFragmentAction.RESULT_CANCELED)
 
@@ -62,6 +62,20 @@ abstract class KitFragment : Fragment(), IKitFragment {
     override fun onNewBundle(bundle: Bundle?) {
     }
 
+    fun getNavigator() = mNavigator
+
+    override fun pop(fragment: KitFragment, data: FragmentResult?) {
+        mNavigator.pop(fragment, data)
+    }
+
+    override fun popTo(fragment: KitFragment, data: FragmentResult?) {
+        mNavigator.popTo(fragment, data)
+    }
+
+    override fun push(fragment: KitFragment) {
+        mNavigator.push(fragment)
+    }
+
     override fun onBackPress(): Boolean {
         return false
     }
@@ -86,16 +100,9 @@ abstract class KitFragment : Fragment(), IKitFragment {
         hostActivity.logFragmentStack()
     }
 
-    override fun <T : KitFragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
-        mFragmentController.start(this, to, bundle ?: Bundle(), launchMode)
-    }
-
-    override fun <T : KitFragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
-        mFragmentController.start(this, to, bundle ?: Bundle(), launchMode, requestCode)
-    }
 
     override fun finish() {
-        mFragmentController.finish(fragmentManager!!, this)
+        mNavigator.pop(this)
     }
 
     override fun setResult(resultCode: Int, data: Bundle?) {

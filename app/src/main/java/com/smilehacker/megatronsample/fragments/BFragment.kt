@@ -22,7 +22,7 @@ class BFragment: KitFragment() {
 
                 button("to C") {
                     setOnClickListener {
-                        startFragment(CFragment::class.java)
+                        push(CFragment())
                     }
                 }
             }

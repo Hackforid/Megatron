@@ -18,6 +18,6 @@ class MainActivity : HostActivity() {
     }
 
     private fun init() {
-        startFragment(AFragment::class.java)
+        push(AFragment())
     }
 }
